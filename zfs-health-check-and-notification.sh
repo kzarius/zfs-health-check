@@ -74,7 +74,7 @@ do
   fi
 
   # Get the overall pool state and set notfication text.
-  poolOverallCondition=$(/sbin/zpool status ${pool} | grep state | awk '{print $2}')
+  poolOverallCondition=$(/sbin/zpool status ${pool} | grep state | awk '/stateL:/ {print $2}')
   poolConditionText="${poolConditionSubText} Overall state is reporting as **${poolOverallCondition}** for this pool."
 
 
@@ -143,7 +143,7 @@ do
   else
 
     # Get the last scrub date.
-    poolScrubRawDate=$(/sbin/zpool status ${pool} | grep scrub | awk '{print $11" "$12" " $13" " $14" "$15}')
+    poolScrubRawDate=$(/sbin/zpool status ${pool} | grep scrub | awk '{print $(NF-4)" "$(NF-3)" " $(NF-2)" " $(NF-1)" "$NF}')
     poolScrubDate=$(date -d "$poolScrubRawDate" +%s)
 
     # Convert expiration to seconds.
